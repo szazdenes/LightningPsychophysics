@@ -18,8 +18,11 @@ UI_DIR = ./ui
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    imagehandlingform.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    imagehandlingform.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    imagehandlingform.ui
