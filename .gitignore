@@ -1,0 +1,6 @@
+bin/
+moc/
+obj/
+ui/
+LightningPsychophysics.pro.user
+Makefile
