@@ -7,6 +7,7 @@ ImageHandlingForm::ImageHandlingForm(QWidget *parent) :
 {
     ui->setupUi(this);
     zoom = 1;
+    this->setBackgroundBrush(Qt::black);
 }
 
 ImageHandlingForm::~ImageHandlingForm()

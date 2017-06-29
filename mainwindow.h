@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QShortcut>
 
 #include "imagehandlingform.h"
 
@@ -31,6 +32,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     int imageIndex;
+    int duration_ms;
     QStringList openFileNames;
 };
 

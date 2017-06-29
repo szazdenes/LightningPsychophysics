@@ -6,10 +6,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    imageIndex = 0;
+
+    ui->backwardPushButton->setHidden(true);
+    ui->forwardPushButton->setDisabled(true);
+
+    imageIndex = -1;
+    duration_ms = 500;
     connect(this, &MainWindow::signalShowImage, ui->graphicsView, &ImageHandlingForm::slotLoadImage);
 
-
+    new QShortcut(QKeySequence(Qt::Key_Space), this, SLOT(on_forwardPushButton_clicked()));
+    new QShortcut(QKeySequence(Qt::Key_Right), this, SLOT(on_forwardPushButton_clicked()));
+    new QShortcut(QKeySequence(Qt::Key_Left), this, SLOT(on_backwardPushButton_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -20,8 +27,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_loadPushButton_clicked()
 {
     openFileNames = QFileDialog::getOpenFileNames(this, QDir::currentPath());
-    QImage image = QImage(openFileNames.at(0));
-    emit signalShowImage(image, 500);
+    imageIndex = -1;
 }
 
 void MainWindow::on_backwardPushButton_clicked()
@@ -29,7 +35,7 @@ void MainWindow::on_backwardPushButton_clicked()
     if(imageIndex > 0 && !openFileNames.isEmpty()){
         imageIndex--;
         QImage image = QImage(openFileNames.at(imageIndex));
-        emit signalShowImage(image, 500);
+        emit signalShowImage(image, duration_ms);
     }
 }
 
@@ -38,6 +44,6 @@ void MainWindow::on_forwardPushButton_clicked()
     if(imageIndex < openFileNames.size()-1 && !openFileNames.isEmpty()){
         imageIndex++;
         QImage image = QImage(openFileNames.at(imageIndex));
-        emit signalShowImage(image, 500);
+        emit signalShowImage(image, duration_ms);
     }
 }
