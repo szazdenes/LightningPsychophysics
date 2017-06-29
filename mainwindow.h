@@ -4,8 +4,11 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QFileDialog>
 
 #include "imagehandlingform.h"
+#include "newsessiondialog.h"
+#include "sessionreadydialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,16 +27,20 @@ public:
 
 private slots:
     void on_loadPushButton_clicked();
-
     void on_backwardPushButton_clicked();
-
     void on_forwardPushButton_clicked();
+    void on_newSessionPushButton_clicked();
+    void slotSessionReady();
 
 private:
     Ui::MainWindow *ui;
     int imageIndex;
     int duration_ms;
     QStringList openFileNames;
+    QShortcut forwardShortcut, backwardShortcut;
+    QFile outfile;
+    QString patientName;
+    int sessionNumber;
 };
 
 #endif // MAINWINDOW_H

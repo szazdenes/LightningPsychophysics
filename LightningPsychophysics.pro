@@ -19,10 +19,16 @@ UI_DIR = ./ui
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    imagehandlingform.cpp
+    imagehandlingform.cpp \
+    newsessiondialog.cpp \
+    sessionreadydialog.cpp
 
 HEADERS  += mainwindow.h \
-    imagehandlingform.h
+    imagehandlingform.h \
+    newsessiondialog.h \
+    sessionreadydialog.h
 
 FORMS    += mainwindow.ui \
-    imagehandlingform.ui
+    imagehandlingform.ui \
+    newsessiondialog.ui \
+    sessionreadydialog.ui
