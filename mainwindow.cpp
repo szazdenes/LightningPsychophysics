@@ -54,7 +54,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_loadPushButton_clicked()
 {
     ui->forwardPushButton->setDisabled(true);
-    outfile.close();
     std::random_shuffle(shuffledImageList.begin(), shuffledImageList.end());
     ui->newSessionPushButton->setEnabled(true);
 }
@@ -106,6 +105,18 @@ void MainWindow::on_newSessionPushButton_clicked()
     sessionNumber = dialog.getSessionNumber();
     connect(&forwardShortcut, &QShortcut::activated, this, &MainWindow::on_forwardPushButton_clicked);
     connect(&backwardShortcut, &QShortcut::activated, this, &MainWindow::on_backwardPushButton_clicked);
+
+    QFile outFile("../../" + patientName + "_" + QString::number(sessionNumber) + ".csv");
+    if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        qDebug("outFile opening error");
+    QTextStream out(&outFile);
+    out << "#filename" << "\t" << "real branches" << "\t" << "observation time (ms)" << "\t" << "estimated branches" << "\n";
+    for(int i = 0; i < shuffledImageList.size(); i++){
+        QPair<QPair<QString, QString>, int> current = shuffledImageList.at(i);
+        if(i < shuffledImageList.size()-1) out << current.first.first << "\t" << current.first.second << "\t" << QString::number(current.second) << "\n";
+        else out << current.first.first << "\t" << current.first.second << "\t" << QString::number(current.second);
+    }
+    outFile.close();
 
     ui->forwardPushButton->setEnabled(true);
     ui->newSessionPushButton->setDisabled(true);

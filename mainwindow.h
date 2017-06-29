@@ -37,7 +37,6 @@ private:
     int imageIndex;
     QStringList openFileNames;
     QShortcut forwardShortcut, backwardShortcut;
-    QFile outfile;
     QString patientName;
     int sessionNumber;
     QList<QPair<QPair<QString, QString>, int> > shuffledImageList; //first: 1:name 2:branches, second: time
