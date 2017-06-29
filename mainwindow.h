@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QShortcut>
-#include <QFileDialog>
+#include <QTextStream>
 
 #include "imagehandlingform.h"
 #include "newsessiondialog.h"
@@ -35,12 +35,14 @@ private slots:
 private:
     Ui::MainWindow *ui;
     int imageIndex;
-    int duration_ms;
     QStringList openFileNames;
     QShortcut forwardShortcut, backwardShortcut;
     QFile outfile;
     QString patientName;
     int sessionNumber;
+    QList<QPair<QPair<QString, QString>, int> > shuffledImageList; //first: 1:name 2:branches, second: time
+
+    void refreshCounter(int num);
 };
 
 #endif // MAINWINDOW_H

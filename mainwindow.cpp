@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->backwardPushButton->setHidden(true);
     ui->forwardPushButton->setDisabled(true);
+    ui->newSessionPushButton->setDisabled(true);
 
     imageIndex = -1;
-    duration_ms = 500;
     patientName = "";
     sessionNumber = 0;
 
@@ -24,6 +24,26 @@ MainWindow::MainWindow(QWidget *parent) :
 
     backwardShortcut.setKey(Qt::Key_Left);
     backwardShortcut.setContext(Qt::ApplicationShortcut);
+
+    shuffledImageList.clear();
+    QFile imageListFile("../lightningList.dat");
+    if(!imageListFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug("ImageList opening error");
+    QTextStream stream(&imageListFile);
+    while(!stream.atEnd()){
+        QString line = stream.readLine();
+        QTextStream lineStream(&line);
+        QString name, branch;
+        lineStream >> name >> branch;
+        QPair<QString, QString> currentPair;
+        currentPair.first = name;
+        currentPair.second = branch;
+        shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 100));
+        shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 500));
+        shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 1000));
+    }
+    imageListFile.close();
+    refreshCounter(imageIndex+1);
 }
 
 MainWindow::~MainWindow()
@@ -33,31 +53,41 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_loadPushButton_clicked()
 {
-    openFileNames = QFileDialog::getOpenFileNames(this, QDir::currentPath());
-    imageIndex = -1;
-    sessionNumber = 0;
-    patientName = "";
-
     ui->forwardPushButton->setDisabled(true);
-    ui->newSessionPushButton->setEnabled(true);
     outfile.close();
+    std::random_shuffle(shuffledImageList.begin(), shuffledImageList.end());
+    ui->newSessionPushButton->setEnabled(true);
 }
 
 void MainWindow::on_backwardPushButton_clicked()
 {
-    if(imageIndex >= 0 && imageIndex < openFileNames.size() && !openFileNames.isEmpty()){
+    if(imageIndex >= 0 && imageIndex < shuffledImageList.size() && !shuffledImageList.isEmpty()){
         if(imageIndex > 0) imageIndex--;
-        QImage image = QImage(openFileNames.at(imageIndex));
+        QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QImage image = QImage(imagePath);
+        if(image.isNull()){
+            QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            image = QImage(imagePath);
+        }
+        int duration_ms = shuffledImageList.at(imageIndex).second;
         emit signalShowImage(image, duration_ms);
+        refreshCounter(imageIndex+1);
     }
 }
 
 void MainWindow::on_forwardPushButton_clicked()
 {
-    if(imageIndex < openFileNames.size()-1 && !openFileNames.isEmpty()){
+    if(imageIndex < shuffledImageList.size()-1 && !shuffledImageList.isEmpty()){
         imageIndex++;
-        QImage image = QImage(openFileNames.at(imageIndex));
+        QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QImage image = QImage(imagePath);
+        if(image.isNull()){
+            QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            image = QImage(imagePath);
+        }
+        int duration_ms = shuffledImageList.at(imageIndex).second;
         emit signalShowImage(image, duration_ms);
+        refreshCounter(imageIndex+1);
     }
     else{
         SessionReadyDialog dialog;
@@ -76,19 +106,26 @@ void MainWindow::on_newSessionPushButton_clicked()
     sessionNumber = dialog.getSessionNumber();
     connect(&forwardShortcut, &QShortcut::activated, this, &MainWindow::on_forwardPushButton_clicked);
     connect(&backwardShortcut, &QShortcut::activated, this, &MainWindow::on_backwardPushButton_clicked);
-    imageIndex = -1;
 
     ui->forwardPushButton->setEnabled(true);
     ui->newSessionPushButton->setDisabled(true);
+    ui->loadPushButton->setDisabled(true);
 }
 
 void MainWindow::slotSessionReady()
 {
     ui->forwardPushButton->setDisabled(true);
-    imageIndex = -1;
     disconnect(&forwardShortcut, &QShortcut::activated, this, &MainWindow::on_forwardPushButton_clicked);
     disconnect(&backwardShortcut, &QShortcut::activated, this, &MainWindow::on_backwardPushButton_clicked);
+    imageIndex = -1;
 
     ui->forwardPushButton->setDisabled(true);
-    ui->newSessionPushButton->setEnabled(true);
+    ui->loadPushButton->setEnabled(true);
+    ui->newSessionPushButton->setDisabled(true);
+    refreshCounter(imageIndex+1);
+}
+
+void MainWindow::refreshCounter(int num)
+{
+    ui->lcdNumber->display(QString::number(num));
 }

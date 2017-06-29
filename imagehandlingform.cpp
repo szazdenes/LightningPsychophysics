@@ -7,6 +7,7 @@ ImageHandlingForm::ImageHandlingForm(QWidget *parent) :
 {
     ui->setupUi(this);
     zoom = 1;
+
     this->setBackgroundBrush(Qt::black);
 }
 
@@ -17,9 +18,9 @@ ImageHandlingForm::~ImageHandlingForm()
 
 void ImageHandlingForm::slotLoadImage(QImage &image, int timems)
 {
-    QGraphicsScene *scene = new QGraphicsScene();
-    this->setScene(scene);
-    scene->addPixmap(QPixmap::fromImage(image));
+    QGraphicsScene *picscene = new QGraphicsScene();
+    this->setScene(picscene);
+    picscene->addPixmap(QPixmap::fromImage(image));
 
     this->scale(1.0/zoom, 1.0/zoom);
     QRectF imageRect = (QRectF)image.rect();

@@ -24,6 +24,7 @@ public slots:
 private:
     Ui::ImageHandlingForm *ui;
     double zoom;
+//    QGraphicsScene *picscene;
 
     void clearScene();
 
