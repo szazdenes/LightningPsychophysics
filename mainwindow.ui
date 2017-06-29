@@ -72,15 +72,6 @@
     </item>
     <item row="2" column="0" colspan="5">
      <widget class="ImageHandlingForm" name="graphicsView">
-      <property name="backgroundBrush">
-       <brush brushstyle="SolidPattern">
-        <color alpha="255">
-         <red>0</red>
-         <green>0</green>
-         <blue>0</blue>
-        </color>
-       </brush>
-      </property>
       <property name="foregroundBrush">
        <brush brushstyle="NoBrush">
         <color alpha="255">
@@ -103,7 +94,7 @@
      <x>0</x>
      <y>0</y>
      <width>732</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -82,7 +82,7 @@ void MainWindow::on_forwardPushButton_clicked()
         QImage image = QImage(imagePath);
         if(image.isNull()){
             QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
-            image = QImage(imagePath);
+            image = QImage("E:/Denes/Kornyezetoptika_labor/Lightning/IMG_7761.JPG");
         }
         int duration_ms = shuffledImageList.at(imageIndex).second;
         emit signalShowImage(image, duration_ms);
