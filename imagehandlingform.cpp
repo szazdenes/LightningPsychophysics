@@ -7,8 +7,7 @@ ImageHandlingForm::ImageHandlingForm(QWidget *parent) :
 {
     ui->setupUi(this);
 //    zoom = 1;
-
-
+    picscene = new QGraphicsScene();
     this->setBackgroundBrush(Qt::black);
 }
 
@@ -20,6 +19,7 @@ ImageHandlingForm::~ImageHandlingForm()
 
 void ImageHandlingForm::slotLoadImage(QImage &image, int timems)
 {
+    delete picscene;
     picscene = new QGraphicsScene();
     this->setScene(picscene);
     picscene->addPixmap(QPixmap::fromImage(image));
