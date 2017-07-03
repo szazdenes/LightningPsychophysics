@@ -38,8 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
         QPair<QString, QString> currentPair;
         currentPair.first = name;
         currentPair.second = branch;
-        shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 100));
         shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 500));
+        shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 750));
         shuffledImageList.append(QPair<QPair<QString, QString>, int>(currentPair, 1000));
     }
     imageListFile.close();
@@ -113,8 +113,8 @@ void MainWindow::on_newSessionPushButton_clicked()
     out << "#filename" << "\t" << "real branches" << "\t" << "observation time (ms)" << "\t" << "estimated branches" << "\n";
     for(int i = 0; i < shuffledImageList.size(); i++){
         QPair<QPair<QString, QString>, int> current = shuffledImageList.at(i);
-        if(i < shuffledImageList.size()-1) out << current.first.first << "\t" << current.first.second << "\t" << QString::number(current.second) << "\n";
-        else out << current.first.first << "\t" << current.first.second << "\t" << QString::number(current.second);
+        if(i < shuffledImageList.size()-1) out << current.first.first << "\t" << QString::number(current.first.second.toInt()+1) << "\t" << QString::number(current.second) << "\n";
+        else out << current.first.first << "\t" << QString::number(current.first.second.toInt()+1) << "\t" << QString::number(current.second);
     }
     outFile.close();
 
