@@ -55,6 +55,8 @@ void MainWindow::on_loadPushButton_clicked()
 {
     ui->forwardPushButton->setDisabled(true);
     std::random_shuffle(shuffledImageList.begin(), shuffledImageList.end());
+    std::random_shuffle(shuffledImageList.begin(), shuffledImageList.end());
+    std::random_shuffle(shuffledImageList.begin(), shuffledImageList.end());
     ui->newSessionPushButton->setEnabled(true);
 }
 
@@ -62,10 +64,10 @@ void MainWindow::on_backwardPushButton_clicked()
 {
     if(imageIndex >= 0 && imageIndex < shuffledImageList.size() && !shuffledImageList.isEmpty()){
         if(imageIndex > 0) imageIndex--;
-        QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
         QImage image = QImage(imagePath);
         if(image.isNull()){
-            QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
             image = QImage(imagePath);
         }
         int duration_ms = shuffledImageList.at(imageIndex).second;
@@ -78,10 +80,10 @@ void MainWindow::on_forwardPushButton_clicked()
 {
     if(imageIndex < shuffledImageList.size()-1 && !shuffledImageList.isEmpty()){
         imageIndex++;
-        QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
         QImage image = QImage(imagePath);
         if(image.isNull()){
-            QString imagePath = "../../Villamfoto/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
             image = QImage(imagePath);
         }
         int duration_ms = shuffledImageList.at(imageIndex).second;
