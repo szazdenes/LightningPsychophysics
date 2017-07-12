@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->backwardPushButton->setHidden(true);
     ui->forwardPushButton->setDisabled(true);
     ui->newSessionPushButton->setDisabled(true);
+    ui->photoRadioButton->toggle();
 
     imageIndex = -1;
     patientName = "";
@@ -26,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     backwardShortcut.setContext(Qt::ApplicationShortcut);
 
     shuffledImageList.clear();
-    QFile imageListFile("../lightningList.dat");
+    QFile imageListFile("../../selected/lightningList.dat");
     if(!imageListFile.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug("ImageList opening error");
     QTextStream stream(&imageListFile);
@@ -64,10 +65,13 @@ void MainWindow::on_backwardPushButton_clicked()
 {
     if(imageIndex >= 0 && imageIndex < shuffledImageList.size() && !shuffledImageList.isEmpty()){
         if(imageIndex > 0) imageIndex--;
-        QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QString imagePath;
+        if(ui->photoRadioButton->isChecked()) imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        if(ui->skeletonRadioButton->isChecked()) imagePath = "../../Agrajz/" + shuffledImageList.at(imageIndex).first.first + "-agrajz.png";
         QImage image = QImage(imagePath);
         if(image.isNull()){
-            QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            if(ui->photoRadioButton->isChecked()) imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            if(ui->skeletonRadioButton->isChecked()) imagePath = "../../Agrajz/" + shuffledImageList.at(imageIndex).first.first + "-agrajz.PNG";
             image = QImage(imagePath);
         }
         int duration_ms = shuffledImageList.at(imageIndex).second;
@@ -80,10 +84,13 @@ void MainWindow::on_forwardPushButton_clicked()
 {
     if(imageIndex < shuffledImageList.size()-1 && !shuffledImageList.isEmpty()){
         imageIndex++;
-        QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        QString imagePath;
+        if(ui->photoRadioButton->isChecked()) imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".jpg";
+        if(ui->skeletonRadioButton->isChecked()) imagePath = "../../Agrajz/" + shuffledImageList.at(imageIndex).first.first + "-agrajz.png";
         QImage image = QImage(imagePath);
         if(image.isNull()){
-            QString imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            if(ui->photoRadioButton->isChecked()) imagePath = "../../selected/" + shuffledImageList.at(imageIndex).first.first + ".JPG";
+            if(ui->skeletonRadioButton->isChecked()) imagePath = "../../Agrajz/" + shuffledImageList.at(imageIndex).first.first + "-agrajz.PNG";
             image = QImage(imagePath);
         }
         int duration_ms = shuffledImageList.at(imageIndex).second;
@@ -108,7 +115,9 @@ void MainWindow::on_newSessionPushButton_clicked()
     connect(&forwardShortcut, &QShortcut::activated, this, &MainWindow::on_forwardPushButton_clicked);
     connect(&backwardShortcut, &QShortcut::activated, this, &MainWindow::on_backwardPushButton_clicked);
 
-    QFile outFile("../../" + patientName + "_" + QString::number(sessionNumber) + ".csv");
+    QFile outFile;
+    if(ui->photoRadioButton->isChecked()) outFile.setFileName("../../" + patientName + "_" + QString::number(sessionNumber) + "_photo.csv");
+    if(ui->skeletonRadioButton->isChecked()) outFile.setFileName("../../" + patientName + "_" + QString::number(sessionNumber) + "_skeleton.csv");
     if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
         qDebug("outFile opening error");
     QTextStream out(&outFile);
@@ -123,6 +132,8 @@ void MainWindow::on_newSessionPushButton_clicked()
     ui->forwardPushButton->setEnabled(true);
     ui->newSessionPushButton->setDisabled(true);
     ui->loadPushButton->setDisabled(true);
+    ui->photoRadioButton->setDisabled(true);
+    ui->skeletonRadioButton->setDisabled(true);
 }
 
 void MainWindow::slotSessionReady()
@@ -135,6 +146,8 @@ void MainWindow::slotSessionReady()
     ui->forwardPushButton->setDisabled(true);
     ui->loadPushButton->setEnabled(true);
     ui->newSessionPushButton->setDisabled(true);
+    ui->photoRadioButton->setEnabled(true);
+    ui->skeletonRadioButton->setEnabled(true);
     refreshCounter(imageIndex+1);
 }
 
