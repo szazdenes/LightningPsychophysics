@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
         QTextStream lineStream(&line);
         QString name, branch;
         lineStream >> name >> branch;
+        while(name.size() < 4)
+            name.prepend("0");
         QPair<QString, QString> currentPair;
         currentPair.first = name;
         currentPair.second = branch;
